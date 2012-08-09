@@ -1,4 +1,5 @@
 from django.db.models.fields import CharField
+from django.forms.fields import ChoiceField
 from django.utils.encoding import force_unicode, StrAndUnicode
 from django_countries import settings
 
@@ -117,10 +118,32 @@ class CountryField(CharField):
         return unicode(value)
 
 
+class CountryFormField(ChoiceField):
+    """
+    A country field for Django forms that provides all ISO 3166-1 countries as
+    choices.
+
+    """
+    descriptor_class = CountryDescriptor
+
+    def __init__(self, choices=(), required=True, widget=None, label=None,
+                     initial=None, help_text=None, *args, **kwargs):
+
+        if len(choices) == 0:
+          # Local import so the countries aren't loaded unless they are needed. 
+          from django_countries.countries import COUNTRIES
+          self.choices = COUNTRIES
+
+        if initial is None:
+          initial = 'US'
+
+        super(CountryFormField, self).__init__(choices=COUNTRIES, required=required, widget=widget, label=label,
+                           initial=initial, help_text=help_text, *args, **kwargs)
+
 # If south is installed, ensure that CountryField will be introspected just
 # like a normal CharField.
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ['^django_countries\.fields\.CountryField'])
+    add_introspection_rules([], ['^django_countries\.fields\.CountryField', '^django_countries\.fields\.CountryFormField'])
 except ImportError:
     pass
