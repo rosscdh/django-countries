@@ -132,12 +132,12 @@ class CountryFormField(ChoiceField):
         if len(choices) == 0:
           # Local import so the countries aren't loaded unless they are needed. 
           from django_countries.countries import COUNTRIES_PLUS_SIMPLE
-          self.choices = COUNTRIES_PLUS_SIMPLE
+          choices = COUNTRIES_PLUS_SIMPLE
 
         if initial is None:
           initial = 'US'
 
-        super(CountryFormField, self).__init__(choices=COUNTRIES, required=required, widget=widget, label=label,
+        super(CountryFormField, self).__init__(choices=choices, required=required, widget=widget, label=label,
                            initial=initial, help_text=help_text, *args, **kwargs)
 
 # If south is installed, ensure that CountryField will be introspected just
