@@ -131,8 +131,8 @@ class CountryFormField(ChoiceField):
 
         if len(choices) == 0:
           # Local import so the countries aren't loaded unless they are needed. 
-          from django_countries.countries import COUNTRIES
-          self.choices = COUNTRIES
+          from django_countries.countries import COUNTRIES_PLUS_SIMPLE
+          self.choices = COUNTRIES_PLUS_SIMPLE
 
         if initial is None:
           initial = 'US'
